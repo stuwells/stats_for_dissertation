@@ -1,5 +1,7 @@
 
 ##aggression
+rm(list=ls())
+options(warn=-1)
 estagr<-read.csv("behavphy_all.csv")
 summary (estagr)
 library (ggplot2)
@@ -44,6 +46,7 @@ library (ggplot2)
 ##jpeg("fig1.jpg",width=12.5, height=7.5, units="in",res=600)
 ##line.plot<- ggplot(data=estagr, aes(y="Agression",x="Estradiol ng/gram"))
 library(ggplot2)
+#question-What is the code below doing?
 phybe<-read.table(file.choose(), header=T, sep=",")
 
 phybe$Est<-as.numeric(as.character(phybe$Est))
