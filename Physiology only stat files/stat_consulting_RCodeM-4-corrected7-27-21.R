@@ -15,15 +15,18 @@ require(ggplot2)
 
 
 ###  Read different squirrel file"
-squirrel <- fread( "Physiology only stat files/mphys_ra.csv",
-                  data.table = F)
+#Start multifemale approach
+#readdata
+squirrel <- fread("Physiology only stat files/all_females.csv",data.table = F,)
+
+#squirrel <- fread( "Physiology only stat files/mphys_ra.csv",
+ #                 data.table = F)
 #squirrel<- read.csv(file="mphys_ra.csv")
 ### manipulate date 
-squirrel$date <- as.Date(squirrel$date,format = '%m/%d/%Y')
-squirrel$year <- year(squirrel$date)
+squirrel$Date <- as.Date(squirrel$Date,format = '%m/%d/%Y')
+squirrel$year <- year(squirrel$Date)
 squirrel$months <- month(squirrel$date, label = T)
-squirrel$day <- day(squirrel$date)
-
+squirrel$day <- day(squirrel$Date)
 ## Log Transformation
 names(squirrel)[c(4,6)] <- c('Estradiol','Progesterone')
 squirrel$Estradiol <- log(squirrel$Estradiol)
@@ -32,7 +35,7 @@ squirrel$Progesterone <- log(squirrel$Progesterone)
 ### Split year to year 
 year2015 = squirrel[squirrel$year == 2015, -5]
 year2016 = squirrel[squirrel$year == 2016, -5]
-year2017 = squirrel[squirrel$year == 2017, -5
+year2017 = squirrel[squirrel$year == 2017, -5]
 
 ################################################################################################
 ################################################################################################
@@ -162,7 +165,7 @@ analyze_monthly_trends <- function(m1, lag=0, cutoff_estradiol=400,
   ### Do monthly panel plots
   m1$event <- event
   #newM1 = melt(m1,id.vars = c('id','day','date','months','year'))
-  newM1 <- tidyr::pivot_longer(data=m1,cols=-c('id','day','date','months','year'),
+  newM1 <- tidyr::pivot_longer(data=m1,cols=-c('ID','day','Date','months','year'),
                                names_to="variable",values_to ="value")
   p1 = ggplot(newM1, aes(x = day, value, col=variable)) + geom_line() + facet_grid(months~.) + 
     theme_bw() +    theme(
@@ -288,6 +291,15 @@ years_plot <- function(days_lag, cutoff_estradiol, cutoff_progesterone,
                         bot_pro = bot_pro,
                         up_est = up_est,
                         bot_est = bot_est)
+  
+  analyze_yearly_trends(m1=year2016, lag = days_lag,
+                        cutoff_estradiol = cutoff_estradiol,
+                        cutoff_progesterone = cutoff_progesterone,
+                        year='2017',
+                        up_pro = up_pro,
+                        bot_pro = bot_pro,
+                        up_est = up_est,
+                        bot_est = bot_est)
 }
 
 ##
@@ -304,35 +316,39 @@ years_plot <- function(days_lag, cutoff_estradiol, cutoff_progesterone,
 
 
 ### Set custom parameters
-cutoff_estradiol = 400,
-cutoff_progesterone = 70,
-days_lag = 0,
+cutoff_estradiol = 400
+cutoff_progesterone = 70
+days_lag = 0
 
 
 
 ## Analyze squirrel data using
 ## Monthly Panels + KS Test
 #jpeg('C:/Users/stuwe/Desktop/Stat analysis from stat lab/monthy_ovulation2015.jpeg')
-time_between_peaks2015 <- analyze_monthly_trends(m1= year2015, lag=days_lag, 
-                                                 cutoff_estradiol = cutoff_estradiol, 
-                                                 cutoff_progesterone = cutoff_progesterone),
+time_between_peaks2015 <- analyze_monthly_trends(m1= year2015, lag=days_lag 
+                                                 cutoff_estradiol = cutoff_estradiol 
+                                                 cutoff_progesterone = cutoff_progesterone
 #dev.off()
 
 #jpeg('C:/Users/stuwe/Desktop/Stat analysis from stat lab/monthy_ovulation2016.jpeg')
 time_between_peaks2016 <- analyze_monthly_trends(m1=year2016, lag=days_lag, 
                                                  cutoff_estradiol = cutoff_estradiol, 
                                                  cutoff_progesterone = cutoff_progesterone),
+
+time_between_peaks2016 <- analyze_monthly_trends(m1=year2017, lag=days_lag, 
+                                                 cutoff_estradiol = cutoff_estradiol, 
+                                                 cutoff_progesterone = cutoff_progesterone),
 #dev.off()
 
-peakSummary = data.frame(rbind(time_between_peaks2015[[1]], 
-      time_between_peaks2016[[1]]), row.names = c('2015','2016')),
+peakSummary = data.frame(rbind(time_between_peaks2015[[1]]), 
+      time_between_peaks2016[[1]]time_between_peaks2017[[1]]), row.names = c('2015','2016','2017'),
 print(peakSummary),
-write.csv(peakSummary, file =('stat results file/output/ovulation_summary.csv'),
+write.csv(peakSummary file =('stat results file/output/ovulation_summary.csv')
 
 ## Analyze squirrel data using
 ## Yearly analysis
 
-jpeg('stat results file/output/yearly_comparison.jpeg',width = 900, height = 1200),
+jpeg('stat results file/output/yearly_comparison.jpeg',width = 900, height = 1200)
 years_plot(days_lag = days_lag , 
            cutoff_estradiol = cutoff_estradiol, 
            cutoff_progesterone = cutoff_progesterone,
@@ -345,18 +361,19 @@ dev.off(),
 
 #Start multifemale approach
 #readdata
-squirrel <- fread("Physiology only stat files/polyestry stats/all_females.csv",data.table = F)
+
 #loop over each female
-female_ids <- unique(all_females$ID),
-for (one_ID in female_ids) {
+female_ID <- unique(all_females$ID),
+for (one_ID in female_ID) 
   #do all the stuff here
   cat("analyzing female",one_ID,"\n")
   
   #subsetdata for this female
-  one_female <- all_females[all_females$id == one_ID,-5]
+  one_female <- all_females[all_females$ID == one_ID,-5]
   #subset 2015 and 2016 data
   year_2015 <- one_female[one_female$year == 2015,]
   year_2016 <- one_female[one_female$year == 2016,]
+  year_2016 <- one_female[one_female$year == 2017,]
   #analyze yearly trends
   time_between_peaks2015 <- analyze_monthly_trends(m1 = year_2015, lag = days_lag, 
                                                    cutoff_estradiol = cutoff_estradiol, 
@@ -368,18 +385,22 @@ for (one_ID in female_ids) {
                                                    cutoff_estradiol = cutoff_estradiol, 
                                                    cutoff_progesterone = cutoff_progesterone)
   
+  time_between_peaks2016 <- analyze_monthly_trends(m1=year_2017, lag=days_lag, 
+                                                   cutoff_estradiol = cutoff_estradiol, 
+                                                   cutoff_progesterone = cutoff_progesterone)
+  
+  
   peakSummary = data.frame(rbind(time_between_peaks2015[[1]], 
-                                 time_between_peaks2016[[1]]), row.names = c('2015','2016'))
-  print(peakSummary)
+  print(peakSummary),
   
   
   #save output files
-  ovulation_file<-paste0("stat results file/output/ovulation_summary_",one_id,".csv")
+  ovulation_file<-paste0("stat results file/output/ovulation_summary_",one_ID,".csv")
   write.csv(peakSummary, file= ovulation_file)
   
   ## Analyze squirrel data using
   ## Yearly analysis
-  comparison_file<-paste0("stat results file/output/yearly_comparison_",one_id,".jpeg")
+  comparison_file <- paste0("stat results file/output/yearly_comparison_",one_ID,".jpeg")
   jpeg(comparison_file ,width = 900, height= 1200)
   years_plot(days_lag = days_lag , 
              cutoff_estradiol = cutoff_estradiol, 
@@ -387,7 +408,7 @@ for (one_ID in female_ids) {
              up_pro = 100,
              bot_pro = 4,
              up_est = 500,
-             bot_est = 15)
+             bot_est = 15,
   dev.off()
 }
 
