@@ -1,6 +1,6 @@
 rm(list=ls())  
 #setwd("C:/Users/stuwe/OneDrive - University of Arizona/mgrsdatafor r/mydatamgrs")
-estagr<-read.csv("behavphy_all.csv")
+estagr<-read.csv("behavphy_all-checking.csv ")
 summary (estagr)
 str(estagr)
 library (ggplot2)
@@ -64,8 +64,8 @@ summary(agr1)
 #jpeg("fig1.jpg",width=12.5, height=7.5, units="in",res=600)
 line.plot<- ggplot(data=estagr, aes(y="Aggression",x="Estradiol ng/gram"))
 line.plot
-#line.plot+
-# geom_line()
-#dev.off()
+line.plot+
+ geom_line()
+dev.off()
 
 
