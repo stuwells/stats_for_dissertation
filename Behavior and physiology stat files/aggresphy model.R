@@ -1,5 +1,5 @@
 
-setwd("C:/Users/stuwe/OneDrive - University of Arizona/1-Doctoral chapters/Stats for dissertation/Behavior and physiology stat files")
+#setwd("C:/Users/stuwe/OneDrive - University of Arizona/1-Doctoral chapters/Stats for dissertation/Behavior and physiology stat files")
 agrphy <- read.csv("behavwest71921.csv")
 class(agrphy$Date)
 library(ggplot2)
@@ -31,6 +31,7 @@ Est1<-normalmixEM(agrphy$Est[!is.na(agrphy$Est)],lambda=0.5,mu=c(1000,2000),sigm
 #Est1<-normalmixEM(agrphy$Est[!is.na(agrphy$Est)],lambda=0.5,mu=c(1000,2000),sigma=500)
 summary(Est1)
 plot(Est1,density=T)
+
 
 
 
