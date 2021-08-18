@@ -19,9 +19,12 @@ summary(agr1)
 plot(agr1)
 
 warnings()
-ggplot(agr1, aes(x = fe_estug, y = mal_agr)) + geom_ribbon(aes(ymin = 0,
-                                                                    ymax = 5, fill = id ), alpha = 0.2) + geom_line(aes(colour = id),
-                                                                                                                      size = 1)
+ggplot(agr1, aes(x = fe_estug,
+                y = mal_agr)) + geom_ribbon(aes(ymin = 0,
+                ymax = 5, fill = id ),
+                alpha = 0.2) + geom_line(aes(colour = id),
+                size = 1)                                                              
+                
 predictagr<-predict(agr1,se.fit=T)
 #ggtitle("Aggression Estradiol Relationship")
 summary (predictagr)
@@ -32,7 +35,7 @@ with(estagr[estagr$bointun!=0,],plot(exp(predictagr$fit)~fe_est,
 
 with(estagr[estagr$bointun!=0,],plot(exp(predictagr$fit)~mal_agr,
                                      ylim=c(0,4),col="blue",cex=5,type="l",
-                                     lty=2, xlab="Estradiol ng/gram",ylab="Aggression",main="Agression and Estradiol Relationship"))                                     
+                                     lty=2, xlab="Estradiol ng/gram",ylab="Aggression",main="Aggression and Estradiol Relationship"))                                     
 with(estagr[estagr$bointun!=0,],lines(mal_agr,exp(predictagr$fit-1.96*predictagr$se.fit)))
 with(estagr[estagr$bointun!=0,],lines(mal_agr,exp(predictagr$fit+1.96*predictagr$se.fit)))
 with(estagr[estagr$bointun!=0,],points(mal_agr,fe_est))
@@ -40,8 +43,8 @@ with(estagr[estagr$bointun!=0,],plot(mal_agr,fe_est),ylab="mal_agr",xlab="fe_est
 
 
 #ggplot(estagr,aes(estagr$bointun),ylim=4 (x=fe_est, color= mal_agr+geom_density(),method=glm()))
-ggplot(estagr, aes(x=fe_est, y=mal_agr)) +
-         geom_smooth(),methods=glm(formula = mal_agr ~ mal_est_estug + I(mal_estug^2), family = "poisson", na.action = "na.exclude")) 
+ggplot(estagr, aes(x = fe_est, y = mal_agr)) +
+         geom_smooth()methods = glm(formula = mal_agr ~ mal_est_estug + I(mal_estug^2), family = "poisson", na.action = "na.exclude") 
                                                                     
 
 #with(estagr[estagr$bointun!=0,],xlab="Estradiol ng/gram",ylab="Agression")

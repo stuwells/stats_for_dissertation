@@ -1,5 +1,5 @@
 
-setwd("C:/Users/stuwe/OneDrive - University of Arizona/mgrsdatafor r/mydatamgrs")
+setwd("C:/Users/stuwe/OneDrive - University of Arizona/1-Doctoral chapters/Stats for dissertation/Behavior and physiology stat files")
 fephy<-read.csv("femphys_for_R.csv")
 library(ggplot2)
 summary(fephy)
