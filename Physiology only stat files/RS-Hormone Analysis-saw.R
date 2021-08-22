@@ -2,9 +2,9 @@
 rm(list=ls())
 #setwd('C:/Users/marim/OneDrive/Documents/Phd/Analysis')
 
-setwd C:\Users\stuwe\OneDrive - University of Arizona\Desktop\MGRS stats results#read the data
-getwd
-metadata <- read.csv("HormoneDatasetworkingwithseasonscsv.csv", header = TRUE)
+#setwd C:\Users\stuwe\OneDrive - University of Arizona\Desktop\MGRS stats results#read the data
+getwd physio  
+metadata <- read.csv("HormoneDatasetworkingwithseasons.csv", header = TRUE)
 #I want to make sure that the hormons level are read as numeric and not characters, na.strings = c("NA"))
 metadata$prog.10 <- as.numeric(metadata$prog.10)
 metadata$est.10 <- as.numeric(metadata$est.10)
@@ -311,3 +311,4 @@ summary(tests.aov)
 #compute Tukey HSD for performing multiple pairwise-comparison between the means of groups
 TukeyHSD(test.aov)
 shapiro.test(x = aov_residuals)
+
