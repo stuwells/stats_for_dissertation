@@ -9,17 +9,13 @@ estagr$fe_est<-as.numeric(as.character(estagr$fe_est))
 estagr$mal_agr<-as.numeric(as.character(estagr$mal_agr))
 estagr$bointun<-as.numeric(as.character(estagr$bointun))
 estagr$date=as.Date(estagr$date, format= "%d/%m/%y")
-estagr$fe_estug<-estagr$fe_est/10 
+estagr$fe_estug<-estagr$fe_est/10
+estagr$fe_estug1<-estagr$fe_est/100
 estagr<-estagr[order(estagr$fe_est),]
 str(estagr)
-#agr1<-with(phybe[phybe$bointun!=0,],glm(b_agr~m_estug+I(m_estug^2),family="poisson",na.action="na.exclude"))
-agr1<-with(estagr[estagr$bointun!=0,],glm(fe_est~mal_agr+I(fe_estug^2),family="poisson",na.action="na.exclude"))
-
-summary(agr1)
-plot(agr1)
 
 warnings()
-ggplot(data = estagr, mapping = aes(x = fe_estug, y = mal_agr)) +
+ggplot(data = estagr, mapping = aes(x = fe_estug1, y = mal_agr)) +
   geom_ribbon(aes(ymin = 0, ymax = 5, fill = id ), alpha = 0.2) +
   geom_line(mapping = aes(colour = id), size = 1)
 
@@ -28,6 +24,8 @@ ggplot(data = estagr, mapping = aes(x = fe_estug, y = mal_agr)) +
 #                alpha = 0.2) + geom_line(aes(colour = id),
 #                size = 1)                                                              
                 
+agr1<-with(estagr[estagr$bointun!=0,],glm(mal_agr~fe_estug+I(fe_estug1^2),family="quasipoisson",na.action="na.exclude"))
+
 predictagr<-predict(agr1,se.fit=T)
 #ggtitle("Aggression Estradiol Relationship")
 summary (predictagr)
@@ -36,18 +34,19 @@ with(estagr[estagr$bointun!=0,],plot(exp(predictagr$fit)~fe_est,
                                     ylim=c(0,4),col="blue",cex=5,type="l",
                                      lty=2, xlab="Estradiol ng/gram",ylab="Aggression"))
 
-with(estagr[estagr$bointun!=0,],plot(exp(predictagr$fit)~mal_agr,
+with(estagr[estagr$bointun!=0,],plot(exp(predictagr$fit)~fe_estug,
                                      ylim=c(0,4),col="blue",cex=5,type="l",
                                      lty=2, xlab="Estradiol ng/gram",ylab="Aggression",main="Aggression and Estradiol Relationship"))                                     
-with(estagr[estagr$bointun!=0,],lines(mal_agr,exp(predictagr$fit-1.96*predictagr$se.fit)))
-with(estagr[estagr$bointun!=0,],lines(mal_agr,exp(predictagr$fit+1.96*predictagr$se.fit)))
-with(estagr[estagr$bointun!=0,],points(mal_agr,fe_est))
-with(estagr[estagr$bointun!=0,],plot(mal_agr,fe_est),ylab="mal_agr",xlab="fe_est",pch=1,ylim=0,5)
+with(estagr[estagr$bointun!=0,],lines(fe_estug,exp(predictagr$fit-1.96*predictagr$se.fit)))
+with(estagr[estagr$bointun!=0,],lines(fe_estug,exp(predictagr$fit+1.96*predictagr$se.fit)))
+with(estagr[estagr$bointun!=0,],points(fe_estug,mal_agr))
+with(estagr[estagr$bointun!=0,],plot(fe_estug,mal_agr),ylab="mal_agr",xlab="fe_est",pch=1,ylim=0,5)
 
 
 #ggplot(estagr,aes(estagr$bointun),ylim=4 (x=fe_est, color= mal_agr+geom_density(),method=glm()))
-ggplot(estagr, aes(x = fe_estug, y = mal_agr) +
-         geom_smooth()methods = glm(formula = mal_agr ~ mal_est_estug + I(mal_estug^2), family = "poisson", na.action = "na.exclude") 
+ggplot(estagr, aes(x = fe_estug, y = mal_agr)) +
+         geom_smooth(method="glm",formula="y~x+I(x^2)",
+                     method.args=list(family = "poisson", na.action = "na.exclude")) 
                                                                     
 
 #with(estagr[estagr$bointun!=0,],xlab="Estradiol ng/gram",ylab="Aggression")
@@ -64,14 +63,25 @@ ggplot(estagr, aes(x = fe_estug, y = mal_agr) +
 
 ##below contains code where mal_agr and fe_estug are reversed
 
-agr1 <- with(estagr[estagr$bointun!= 0,],glm(mal_agr~fe_estug+I(fe_estug^2),family="poisson",na.action ="na.exclude"))
+#agr1 <- with(estagr[estagr$bointun!= 0,],glm(mal_agr~fe_estug+I(fe_estug^2),family="quasipoisson",na.action ="na.exclude"))
 summary(agr1)
 dev.off()
-jpeg("fig1.jpg",width = 12.5, height = 7.5, units="in",res = 600)
-line.plot<- ggplot(data=estagr, aes(y="Aggression",x ="Estradiol ng/gram")
+
+#agr1<-with(phybe[phybe$bointun!=0,],glm(b_agr~m_estug+I(m_estug^2),family="poisson",na.action="na.exclude"))
+agr1<-with(estagr[estagr$bointun!=0,],glm(fe_est~mal_agr+I(fe_estug^2),family="quasipoisson",na.action="na.exclude"))
+
+summary(agr1)
+plot(agr1)
+
+
+agr2 <- with(estagr,glm(mal_agr~fe_estug+I(fe_estug^2),family="quasipoisson",na.action ="na.exclude"))
+summary(agr2)
+#jpeg("fig1.jpg",width = 12.5, height = 7.5, units="in",res = 600)
+line.plot<- ggplot(data=estagr, aes(y="mal_agr",x ="fe_est"))
 line.plot
 line.plot+
-geom_line()
-dev.off()
-
+geom_point()
+line.plot
+#dev.off()
+ggsave(plot=line.plot,filename = "fig1.jpg",width = 12.5, height = 7.5, units="in",dpi = 600)
 
