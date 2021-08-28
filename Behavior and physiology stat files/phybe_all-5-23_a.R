@@ -30,14 +30,14 @@ predictagr<-predict(agr1,se.fit=T)
 #ggtitle("Aggression Estradiol Relationship")
 summary (predictagr)
 
-with(estagr[estagr$bointun!=0,],plot(exp(predictagr$fit)~fe_est,
+with(estagr,plot(exp(predictagr$fit)~fe_est,
                                     ylim=c(0,4),col="blue",cex=5,type="l",
                                      lty=2, xlab="Estradiol ng/gram",ylab="Aggression"))
 
-with(estagr[estagr$bointun!=0,],plot(exp(predictagr$fit)~fe_estug,
+with(estagr,plot(exp(predictagr$fit)~fe_estug,
                                      ylim=c(0,4),col="blue",cex=5,type="l",
                                      lty=2, xlab="Estradiol ng/gram",ylab="Aggression",main="Aggression and Estradiol Relationship"))                                     
-with(estagr[estagr$bointun!=0,],lines(fe_estug,exp(predictagr$fit-1.96*predictagr$se.fit)))
+with(estagr,lines(fe_estug,exp(predictagr1$fit-1.96*predictagr1$se.fit)))
 with(estagr[estagr$bointun!=0,],lines(fe_estug,exp(predictagr$fit+1.96*predictagr$se.fit)))
 with(estagr[estagr$bointun!=0,],points(fe_estug,mal_agr))
 with(estagr[estagr$bointun!=0,],plot(fe_estug,mal_agr),ylab="mal_agr",xlab="fe_est",pch=1,ylim=0,5)

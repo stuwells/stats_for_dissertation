@@ -17,6 +17,7 @@ ggplot(data = estagr, mapping = aes(x = fe_estug, y = mal_agr)) +
   geom_ribbon(aes(ymin = 0, ymax = 5, fill = id ), alpha = 0.2) +
   geom_line(mapping = aes(colour = id), size = 1)
 
+
 agr1<-with(estagr,glm(fe_est~mal_agr+I(fe_estug^2),family="poisson",na.action="na.exclude"))
 agr1a<-with(estagr,glm(fe_est~mal_agr),family="poisson",na.action="na.exclude")
 
@@ -25,10 +26,66 @@ plot(agr1)
 summary(agr1a)
 plot(agr1a)
 
+
+
+
+predictagr1<-predict(agr1,se.fit=T)
+#ggtitle("Aggression Estradiol Relationship")
+summary (predictagr1)
+with(estagr,plot(exp(predictagr1$fit)~fe_est,
+                 ylim=c(0,4),col="blue",cex=5,type="l",
+                 lty=2, xlab="Estradiol ng/gram",ylab="Aggression"))
+
+with(estagr,plot(exp(predictagr1a$fit)~fe_estug,
+                 ylim=c(0,4),col="blue",cex=5,type="l",
+                 lty=2, xlab="Estradiol ng/gram",ylab="Aggression"))
+
+with(estagr,lines(fe_est,exp(predictagr1$fit-1.96*predictagr1$se.fit)))
+with(estagr,lines(fe_estug,exp(predictagr1a$fit+1.96*predictagr1a$se.fit)))
+with(estagr,lines(fe_est,exp(predictagr2$fit-1.96*predictagr2$se.fit)))
+with(estagr,lines(fe_estug,exp(predictagr2a$fit+1.96*predictagr2a$se.fit)))
+with(estagr,points(fe_estug,mal_agr))
+with(estagr,plot(fe_estug,mal_agr),ylab="mal_agr",xlab="fe_est",pch=1,ylim=0,5)
+
+predictagr1a<-predict(agr1a,se.fit=T)
+#ggtitle("Aggression Estradiol Relationship")
+summary (predictagr1a)
+
+with(estagr,plot(exp(predictagr2$fit)~fe_est,
+                 ylim=c(0,4),col="blue",cex=5,type="l",
+                 lty=2, xlab="Estradiol ng/gram",ylab="Aggression"))
+
+with(estagr,plot(exp(predictagr2$fit)~fe_estug,
+                 ylim=c(0,4),col="blue",cex=5,type="l",
+                 lty=2, xlab="Estradiol ng/gram",ylab="Aggression",main="Aggression and Estradiol Relationship"))                                     
+
+
+with(estagr,plot(exp(predictagr2a$fit)~fe_est,
+                 ylim=c(0,4),col="blue",cex=5,type="l",
+                 lty=2, xlab="Estradiol ng/gram",ylab="Aggression",main="Aggression and Estradiol Relationship"))  
+
+with(estagr,plot(exp(predictagr2a$fit)~fe_estug,
+                 ylim=c(0,4),col="blue",cex=5,type="l",
+                 lty=2, xlab="Estradiol ng/gram",ylab="Aggression",main="Aggression and Estradiol Relationship"))  
+
+
+
+
 agr2 <- with(estagr,glm(mal_agr~fe_estug+I(fe_estug^2),family="poisson",na.action ="na.exclude"))
 agr2a <- with(estagr,glm(mal_agr~fe_estug,family="poisson",na.action ="na.exclude"))
+
+predictagr2<-predict(agr2,se.fit=T)
+#ggtitle("Aggression Estradiol Relationship")
+summary (predictagr2)
+
 summary(agr2)
 plot(agr2)
+
+
+predictagr2a<-predict(agr2a,se.fit=T)
+#ggtitle("Aggression Estradiol Relationship")
+summary (predictagr2a)
+
 summary(agr2a)
 plot(agr2a)
 
@@ -36,7 +93,7 @@ plot(agr2a)
 line.plot<- ggplot(data=estagr, aes(y="mal_agr",x ="fe_est"))
 line.plot
 line.plot+
-  geom_point()
+geom_point()
 line.plot
 #dev.off()
 ggsave(plot=line.plot,filename = "fig1.jpg",width = 12.5, height = 7.5, units="in",dpi = 600)
