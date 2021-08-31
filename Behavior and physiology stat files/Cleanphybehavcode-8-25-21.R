@@ -75,7 +75,6 @@ with(estagr,plot(exp(predictagr2a$fit)~fe_estug,
 
 
 
-
 agr2 <- with(estagr,glm(mal_agr~fe_estug+I(fe_estug^2),family="poisson",na.action ="na.exclude"))
 agr2a <- with(estagr,glm(mal_agr~fe_estug,family="poisson",na.action ="na.exclude"))
 
@@ -102,12 +101,12 @@ summary (predictagr2a)
 summary(agr2a)
 plot(agr2a)
 
-#for specific female
+#for specific female - Bob vs Merrill
 agr_fb <- with(estagr[estagr$id == "bm", ],
                glm(mal_agr ~ fe_estug,
                    family = "poisson",
                    na.action = "na.exclude"))
-#iwant to include the squared value of estradiol in the model:
+#I want to include the squared value of estradiol in the model:
 agr_fb2 <- with(estagr[estagr$id == "bm", ],
                glm(mal_agr ~ fe_estug + I(fe_estug^2),
                    family = "poisson",
@@ -118,8 +117,7 @@ plot(agr_fb)
 summary(agr_fb2)
 plot(agr_fb2)
 
-
-
+#comparing the second female with male aggression Al vs Spruce
 
 agr_fba <- with(estagr[estagr$id == "as", ],
                glm(mal_agr ~ fe_estug,
@@ -133,10 +131,10 @@ agr_fba2 <- with(estagr[estagr$id == "as", ],
                    na.action = "na.exclude"))
 
 summary(agr_fba)
-plot(agr_fba2)
+plot(agr_fba)
 
-summary(agr_fb2)
-plot(agr_fb2)
+summary(agr_fba2)
+plot(agr_fba2)
 
 
 #jpeg("fig1.jpg",width = 12.5, height = 7.5, units="in",res = 600)
