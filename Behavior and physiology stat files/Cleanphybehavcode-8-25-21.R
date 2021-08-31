@@ -30,6 +30,7 @@ plot(agr1a)
 
 
 predictagr1<-predict(agr1,se.fit=T)
+predictagr1a<-predict(agr1,se.fit=T)
 #ggtitle("Aggression Estradiol Relationship")
 summary (predictagr1)
 with(estagr,plot(exp(predictagr1$fit)~fe_est,
@@ -47,9 +48,13 @@ with(estagr,lines(fe_estug,exp(predictagr2a$fit+1.96*predictagr2a$se.fit)))
 with(estagr,points(fe_estug,mal_agr))
 with(estagr,plot(fe_estug,mal_agr),ylab="mal_agr",xlab="fe_est",pch=1,ylim=0,5)
 
-predictagr1a<-predict(agr1a,se.fit=T)
+predictagr2<-predict(agr1a,se.fit=T)
 #ggtitle("Aggression Estradiol Relationship")
-summary (predictagr1a)
+summary (predictagr2)
+
+predictagr2a<-predict(agr1a,se.fit=T)
+#ggtitle("Aggression Estradiol Relationship")
+summary (predictagr2a)
 
 with(estagr,plot(exp(predictagr2$fit)~fe_est,
                  ylim=c(0,4),col="blue",cex=5,type="l",
@@ -81,6 +86,14 @@ summary (predictagr2)
 summary(agr2)
 plot(agr2)
 
+#testing the better of two models
+agr2a <- with(estagr,glm(mal_agr~fe_estug,family="poisson",na.action ="na.exclude"))
+
+agr3a <- with(estagr,glm(mal_agr ~ fe_estug + I(fe_estug^2),
+                         family="poisson",
+                         na.action ="na.exclude"))
+#anova to compare the better of the two models
+anova(agr3a, agr2a, test = "Chisq")
 
 predictagr2a<-predict(agr2a,se.fit=T)
 #ggtitle("Aggression Estradiol Relationship")
@@ -88,6 +101,43 @@ summary (predictagr2a)
 
 summary(agr2a)
 plot(agr2a)
+
+#for specific female
+agr_fb <- with(estagr[estagr$id == "bm", ],
+               glm(mal_agr ~ fe_estug,
+                   family = "poisson",
+                   na.action = "na.exclude"))
+#iwant to include the squared value of estradiol in the model:
+agr_fb2 <- with(estagr[estagr$id == "bm", ],
+               glm(mal_agr ~ fe_estug + I(fe_estug^2),
+                   family = "poisson",
+                   na.action = "na.exclude"))
+summary(agr_fb)
+plot(agr_fb)
+
+summary(agr_fb2)
+plot(agr_fb2)
+
+
+
+
+agr_fba <- with(estagr[estagr$id == "as", ],
+               glm(mal_agr ~ fe_estug,
+                   family = "poisson",
+                   na.action = "na.exclude"))
+
+#iwant to include the squared value of estradiol in the model:
+agr_fba2 <- with(estagr[estagr$id == "as", ],
+               glm(mal_agr ~ fe_estug + I(fe_estug^2),
+                   family = "poisson",
+                   na.action = "na.exclude"))
+
+summary(agr_fba)
+plot(agr_fba2)
+
+summary(agr_fb2)
+plot(agr_fb2)
+
 
 #jpeg("fig1.jpg",width = 12.5, height = 7.5, units="in",res = 600)
 line.plot<- ggplot(data=estagr, aes(y="mal_agr",x ="fe_est"))
