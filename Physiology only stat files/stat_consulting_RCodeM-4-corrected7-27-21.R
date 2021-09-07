@@ -17,7 +17,7 @@ require(ggplot2)
 ###  Read different squirrel file"
 #Start multifemale approach
 #readdata
-squirrel <- fread("Physiology only stat files/all_females.csv",data.table = F,)
+squirrel <- fread("all_females_a.csv",data.table = F,)
 
 #squirrel <- fread( "Physiology only stat files/mphys_ra.csv",
  #                 data.table = F)
@@ -28,7 +28,7 @@ squirrel$year <- year(squirrel$Date)
 squirrel$months <- month(squirrel$date, label = T)
 squirrel$day <- day(squirrel$Date)
 ## Log Transformation
-names(squirrel)[c(4,6)] <- c('Estradiol','Progesterone')
+names(squirrel)[c(4,5)] <- c('Estradiol','Progesterone')
 squirrel$Estradiol <- log(squirrel$Estradiol)
 squirrel$Progesterone <- log(squirrel$Progesterone)
 
@@ -325,19 +325,19 @@ days_lag = 0
 ## Analyze squirrel data using
 ## Monthly Panels + KS Test
 #jpeg('C:/Users/stuwe/Desktop/Stat analysis from stat lab/monthy_ovulation2015.jpeg')
-time_between_peaks2015 <- analyze_monthly_trends(m1= year2015, lag=days_lag 
-                                                 cutoff_estradiol = cutoff_estradiol 
-                                                 cutoff_progesterone = cutoff_progesterone
+time_between_peaks2015 <- analyze_monthly_trends(m1 = year2015, lag = days_lag, 
+                                                 cutoff_estradiol = cutoff_estradiol, 
+                                                 cutoff_progesterone = cutoff_progesterone)
 #dev.off()
 
 #jpeg('C:/Users/stuwe/Desktop/Stat analysis from stat lab/monthy_ovulation2016.jpeg')
-time_between_peaks2016 <- analyze_monthly_trends(m1=year2016, lag=days_lag, 
+time_between_peaks2016 <- analyze_monthly_trends(m1= year2016, lag=days_lag, 
                                                  cutoff_estradiol = cutoff_estradiol, 
-                                                 cutoff_progesterone = cutoff_progesterone),
+                                                 cutoff_progesterone = cutoff_progesterone)
 
 time_between_peaks2016 <- analyze_monthly_trends(m1=year2017, lag=days_lag, 
                                                  cutoff_estradiol = cutoff_estradiol, 
-                                                 cutoff_progesterone = cutoff_progesterone),
+                                                 cutoff_progesterone = cutoff_progesterone)
 #dev.off()
 
 peakSummary = data.frame(rbind(time_between_peaks2015[[1]]), 
@@ -348,7 +348,7 @@ write.csv(peakSummary file =('stat results file/output/ovulation_summary.csv')
 ## Analyze squirrel data using
 ## Yearly analysis
 
-jpeg('stat results file/output/yearly_comparison.jpeg',width = 900, height = 1200)
+jpeg('stat results file/output/yearly_comparison.jpeg',width = 900, height = 1200),
 years_plot(days_lag = days_lag , 
            cutoff_estradiol = cutoff_estradiol, 
            cutoff_progesterone = cutoff_progesterone,
@@ -366,7 +366,7 @@ dev.off(),
 female_ID <- unique(all_females$ID),
 for (one_ID in female_ID) 
   #do all the stuff here
-  cat("analyzing female",one_ID,"\n")
+  cat("analyzing female",one_ID,"\n"),
   
   #subsetdata for this female
   one_female <- all_females[all_females$ID == one_ID,-5]
@@ -381,13 +381,13 @@ for (one_ID in female_ID)
    
   
    
-  time_between_peaks2016 <- analyze_monthly_trends(m1=year_2016, lag=days_lag, 
+  time_between_peaks2016 <- analyze_monthly_trends(m2=year_2016, lag=days_lag, 
                                                    cutoff_estradiol = cutoff_estradiol, 
-                                                   cutoff_progesterone = cutoff_progesterone)
+                                                   cutoff_progesterone = cutoff_progesterone),
   
-  time_between_peaks2016 <- analyze_monthly_trends(m1=year_2017, lag=days_lag, 
+  time_between_peaks2017 <- analyze_monthly_trends(m3=year_2017, lag=days_lag, 
                                                    cutoff_estradiol = cutoff_estradiol, 
-                                                   cutoff_progesterone = cutoff_progesterone)
+                                                   cutoff_progesterone = cutoff_progesterone),
   
   
   peakSummary = data.frame(rbind(time_between_peaks2015[[1]], 

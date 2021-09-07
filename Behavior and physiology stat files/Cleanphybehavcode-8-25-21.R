@@ -41,6 +41,7 @@ with(estagr,plot(exp(predictagr1a$fit)~fe_estug,
                  ylim=c(0,4),col="blue",cex=5,type="l",
                  lty=2, xlab="Estradiol ng/gram",ylab="Aggression"))
 
+#with(estagr[estagr$bointun!=0,],lines(fe_estug,exp(predictagr$fit+1.96*predictagr$se.fit)))
 with(estagr,lines(fe_est,exp(predictagr1$fit-1.96*predictagr1$se.fit)))
 with(estagr,lines(fe_estug,exp(predictagr1a$fit+1.96*predictagr1a$se.fit)))
 with(estagr,lines(fe_est,exp(predictagr2$fit-1.96*predictagr2$se.fit)))
@@ -63,11 +64,16 @@ with(estagr,plot(exp(predictagr2$fit)~fe_est,
 with(estagr,plot(exp(predictagr2$fit)~fe_estug,
                  ylim=c(0,4),col="blue",cex=5,type="l",
                  lty=2, xlab="Estradiol ng/gram",ylab="Aggression",main="Aggression and Estradiol Relationship"))                                     
+# creates a glm fig with abline
+ggplot(estagr, aes(x = fe_estug, y = mal_agr)) +
+  geom_smooth(method="glm",formula="y~x+I(x^2)",
+              method.args=list(family = "poisson", na.action = "na.exclude")) 
 
 
 with(estagr,plot(exp(predictagr2a$fit)~fe_est,
                  ylim=c(0,4),col="blue",cex=5,type="l",
                  lty=2, xlab="Estradiol ng/gram",ylab="Aggression",main="Aggression and Estradiol Relationship"))  
+
 
 with(estagr,plot(exp(predictagr2a$fit)~fe_estug,
                  ylim=c(0,4),col="blue",cex=5,type="l",
@@ -138,7 +144,7 @@ plot(agr_fba2)
 
 
 #jpeg("fig1.jpg",width = 12.5, height = 7.5, units="in",res = 600)
-line.plot<- ggplot(data=estagr, aes(y="mal_agr",x ="fe_est"))
+line.plot<- ggplot(data=estagr, aes(y=mal_agr,x =fe_estug))+geom_point()
 line.plot
 line.plot+
 geom_point()
