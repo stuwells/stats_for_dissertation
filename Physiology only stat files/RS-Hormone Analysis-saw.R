@@ -5,7 +5,7 @@ rm(list=ls())
 #setwd C:\Users\stuwe\OneDrive - University of Arizona\Desktop\MGRS stats results#read the data
 getwd physio  
 metadata <- read.csv("HormoneDatasetworkingwithseasons.csv", header = TRUE)
-#I want to make sure that the hormons level are read as numeric and not characters, na.strings = c("NA"))
+#I want to make sure that the hormones level are read as numeric and not characters, na.strings = c("NA"))
 metadata$prog.10 <- as.numeric(metadata$prog.10)
 metadata$est.10 <- as.numeric(metadata$est.10)
 metadata$cort.10 <- as.numeric(metadata$cort.10)

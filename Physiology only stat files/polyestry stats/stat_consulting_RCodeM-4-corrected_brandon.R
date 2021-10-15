@@ -32,6 +32,14 @@ squirrel$day <- day(squirrel$date)
 #Adjusted names for code
 names(squirrel)[c(3,4)] <- c('Progesterone','Estradiol')
 
+#copy of code from original document to see if it runs correctly
+plot(log(squirrel$Progesterone), type='l', ylim=c(3,4), lwd=2, col='green',
+     main='Estradiol ~ Progesterone\nAfter Log Transformation', xlab='Day',ylab='Log Concentration')
+lines(log(squirrel$Estradiol), type='l', lwd=2, col='blue')
+par(mfrow=c(1,2))
+hist(squirrel$Progesterone, main='Progesterone', xlab='Progesterone', 20)
+hist(log(squirrel$Progesterone), main='Log (Progesterone)', xlab='log(Progesterone)', 20)
+
 #Added this to just save the original dataset ~ Brandon
 squirrelRAW <- squirrel
 
@@ -39,13 +47,9 @@ squirrelRAW <- squirrel
 squirrel$Estradiol <- log(squirrel$Estradiol)
 squirrel$Progesterone <- log(squirrel$Progesterone)
 
-### Split year to year--commenting out to test m1,m2 function below 
-#year2015 = squirrel[squirrel$year == 2015, -5]
-#year2016 = squirrel[squirrel$year == 2016, -5]
-#year2017 = squirrel[squirrel$year == 2017, -6]
-
-m1 = squirrel[squirrel$year == 2015, -5]
-m2 = squirrel[squirrel$year == 2016, -5]
+### Split year to year 
+year2015 = squirrel[squirrel$year == 2015, -5]
+year2016 = squirrel[squirrel$year == 2016, -5]
 #year2017 = squirrel[squirrel$year == 2017, -5]
 
 ################################################################################################
@@ -80,23 +84,17 @@ localMaxima <- function(x) {
 ## - plots peaks and events 
 ##################################
 
-analyze_yearly_trends <- function(m1, lag=1, cutoff_Estradiol=390,
-                                  cutoff_Progesterone=5, year='2015',
-                                  up_pro=35,
+analyze_yearly_trends <- function(m1, lag=1, cutoff_Estradiol=100,
+                                  cutoff_Progesterone=3, year='2015',
+                                  up_pro=20,
                                   bot_pro=10,
-                                  up_est=350,
-                                  bot_est=20)
-
-#analyze_yearly_trends <- function(m2, lag=1, cutoff_Estradiol=390,
-                                    cutoff_Progesterone=5, year='2016',
-                                    up_pro=35,
-                                    bot_pro=10,
-                                    up_est=350,
-                                    bot_est=20){ 
+                                  up_est=100,
+                                  bot_est=20){
   
   ####------##### Test
   m1 <- year2016
-  ####______##### Test### Detect events 
+  ####______##### Test
+  ### Detect events 
   estra_max <- numeric(nrow(m1))
   estra_max[localMaxima(m1$Estradiol)] <- 1 
   estra_max[which(m1$Estradiol < log(cutoff_Estradiol))] <- 0
@@ -118,7 +116,7 @@ analyze_yearly_trends <- function(m1, lag=1, cutoff_Estradiol=390,
   max_mat <- data.frame(estra_max, proge_max, event)
   
   ### Plot all events
-  plot(m1$date, m1$Progesterone, type='l', ylim=c(4,8), lwd=2, col='green', 
+  plot(m1$date, m1$Progesterone, type='l', ylim=c(3,4), lwd=2, col='green', 
        main=paste('Progesterone ~ Estradiol',year,sep=':'), xlab='Day',ylab='Log Concentration')
   lines(m1$date, m1$Estradiol, type='l', lwd=2, col='blue')
   event <- m1$Estradiol * max_mat$event
@@ -149,7 +147,7 @@ analyze_yearly_trends <- function(m1, lag=1, cutoff_Estradiol=390,
 ## - plots peaks and events 
 ##################################
 
-analyze_monthly_trends <- function(m1, lag=0, cutoff_Estradiol=150, 
+analyze_monthly_trends <- function(m1, lag=0, cutoff_Estradiol=390, 
                                    cutoff_Progesterone=20){
   ### Detect events -a third line of code was added to detect progesterone for two days
   estra_max <- numeric(nrow(m1))
@@ -168,7 +166,7 @@ analyze_monthly_trends <- function(m1, lag=0, cutoff_Estradiol=150,
   for(i in 1:length(event)){
     date_search = min(i+lag, length(event))
     
-    if( estra_max[i]==1 & sum(proge_max[i:(i+lag)])  0 &
+    if( estra_max[i]==1 & sum(proge_max[i:(i+lag)])>0 &
         day(m1$date[date_search]) - day(m1$date[i]) <= lag){
       event[i] <- 1
       #event[i:(i+lag)] <- 1
@@ -289,9 +287,9 @@ of equal-peak intervals')
 
 ### Yearly summary
 years_plot <- function(days_lag, cutoff_Estradiol, cutoff_Progesterone,
-                       up_pro = 30,
+                       up_pro = 20,
                        bot_pro = 10,
-                       up_est = 400,
+                       up_est = 75,
                        bot_est = 20){
   
   par(mfrow=c(2,1), mar=c(5,5,5,5))
@@ -336,9 +334,9 @@ years_plot <- function(days_lag, cutoff_Estradiol, cutoff_Progesterone,
 
 
 ### Set custom parameters
-cutoff_Estradiol = 100
+cutoff_Estradiol = 140
 cutoff_Progesterone = 20
-days_lag = 1
+days_lag = 0
 
 
 
@@ -351,7 +349,7 @@ time_between_peaks2015 <- analyze_monthly_trends(m1 = year2015, lag = days_lag,
 #dev.off()
 
 #jpeg('C:/Users/stuwe/Desktop/Stat analysis from stat lab/monthy_ovulation2016.jpeg')
-time_between_peaks2016 <- analyze_monthly_trends(m2=year2016  , lag = days_lag, 
+time_between_peaks2016 <- analyze_monthly_trends(m1 = year2016, lag = days_lag, 
                                                  cutoff_Estradiol = cutoff_Estradiol, 
                                                  cutoff_Progesterone = cutoff_Progesterone)
 
@@ -374,7 +372,7 @@ years_plot(days_lag = days_lag ,
            cutoff_Progesterone = cutoff_Progesterone,
            up_pro = 30,
            bot_pro = 10,
-           up_est = 300,
+           up_est = 200,
            bot_est = 20)
 dev.off()
 
@@ -421,14 +419,26 @@ for (one_ID in female_ID) {
   ## Analyze squirrel data using
   ## Yearly analysis
   comparison_file <- paste0("polyestry stats/monthlysummary",one_ID,".jpeg")
-  jpeg(comparison_file ,width = 600, height= 800)
+  jpeg(comparison_file ,width = 600, height = 800)
   years_plot(days_lag = days_lag , 
              cutoff_Estradiol = cutoff_Estradiol, 
              cutoff_Progesterone = cutoff_Progesterone,
-             up_pro = 50,
+             up_pro = 30,
              bot_pro =10,
              up_est = 200,
              bot_est = 20)
   dev.off()
 }
+#code suggestions from Oliver to see what output is doing-9-17/21
+cat("Current row:", i, "\n")
+cat("date_search:", date_search, "\n")
+cat("lag:", lag, "\n")
+cat("First day:", day(m1$date[i]), "\n")
+cat("Last day:", day(m1$date[date_search]), "\n"))
+cat("Estra max:", estra_max[i], "\n")
+cat("Progesterone sum:", sum(proge_max[i:(i+lag)]), "\n")
+
+if(estra_max[i]==1 & sum(proge_max[i:(i+lag)])>0 &
+day(m1$date[date_search]) - day(m1$date[i]) <= lag){
+  
 
