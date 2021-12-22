@@ -2,7 +2,7 @@
 ## or analysis from your 
 ## workspace 
 rm(list=ls())
-
+sd
 #options(warn=-1)
 
 ### Load libraries
@@ -18,7 +18,7 @@ require(ggplot2)
 ###  Read different squirrel file"
 #Start multifemale approach
 #readdata
-squirrel <- fread("all_females_a.csv ",data.table = F,)
+squirrel <- fread("all_females_a.csv  ",data.table = F,)
 
 
 #squirrel <- fread( "Physiology only stat files/mphys_ra.csv",data.table = F)
@@ -361,12 +361,12 @@ time_between_peaks2016 <- analyze_monthly_trends(m1 = year2016, lag = days_lag,
 peakSummary = data.frame(rbind(time_between_peaks2015[[1]], 
       time_between_peaks2016[[1]]), row.names = c('2015','2016'))
 print(peakSummary)
-write.csv(peakSummary, file ='polyestry stats/ovulation_summary.csv')
+#write.csv(peakSummary, file ='polyestry stats/ovulation_summary.csv')
 
 ## Analyze squirrel data using
 ## Yearly analysis
 
-jpeg('polyestry stats/yearlyanalysis.jpg',width = 600, height = 800)
+jpeg('polyestry stats/yearlyanalysisa.jpg',width = 600, height = 800)
 years_plot(days_lag = days_lag , 
            cutoff_Estradiol = cutoff_Estradiol, 
            cutoff_Progesterone = cutoff_Progesterone,
@@ -374,7 +374,7 @@ years_plot(days_lag = days_lag ,
            bot_pro = 10,
            up_est = 200,
            bot_est = 20)
-dev.off()
+#dev.off()
 
 
 #Start multifemale approach

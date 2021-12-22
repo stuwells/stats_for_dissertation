@@ -18,7 +18,7 @@ require(ggplot2)
 ###  Read different squirrel file"
 #Start multifemale approach
 #readdata
-squirrel <- fread("all_females_a.csv ",data.table = F,)
+squirrel <- fread("all_females_a.csv  ",data.table = F,)
 
 
 #squirrel <- fread( "Physiology only stat files/mphys_ra.csv",data.table = F)
@@ -36,8 +36,8 @@ names(squirrel)[c(3,4)] <- c('Progesterone','Estradiol')
 squirrelRAW <- squirrel
 
 ## Log Transformation
-squirrel$Estradiol <- log(squirrel$Estradiol)
-squirrel$Progesterone <- log(squirrel$Progesterone)
+squirrel$Estradiol_log <- log(squirrel$Estradiol)
+squirrel$Progesterone_log <- log(squirrel$Progesterone)
 
 ### Split year to year--commenting out to test m1,m2 function below 
 #year2015 = squirrel[squirrel$year == 2015, -5]
@@ -80,15 +80,15 @@ localMaxima <- function(x) {
 ## - plots peaks and events 
 ##################################
 
-analyze_yearly_trends <- function(m1, lag=1, cutoff_Estradiol=390,
-                                  cutoff_Progesterone=5, year='2015',
+analyze_yearly_trendsm1 <- function(m1, lag=1, cutoff_Estradiol=390,
+                                  cutoff_Progesterone=35, year='2015',
                                   up_pro=35,
                                   bot_pro=10,
                                   up_est=350,
                                   bot_est=20)
 
-#analyze_yearly_trends <- function(m2, lag=1, cutoff_Estradiol=390,
-                                    cutoff_Progesterone=5, year='2016',
+analyze_yearly_trendsm2 <- function(m2, lag=1, cutoff_Estradiol=390,
+                                    cutoff_Progesterone=35, year='2016',
                                     up_pro=35,
                                     bot_pro=10,
                                     up_est=350,
