@@ -40,8 +40,8 @@ squirrel$Estradiol_log <- log(squirrel$Estradiol)
 squirrel$Progesterone_log <- log(squirrel$Progesterone)
 
 ### Split year to year--commenting out to test m1,m2 function below 
-#year2015 = squirrel[squirrel$year == 2015, -5]
-#year2016 = squirrel[squirrel$year == 2016, -5]
+year2015 = squirrel[squirrel$year == 2015, -5]
+year2016 = squirrel[squirrel$year == 2016, -5]
 #year2017 = squirrel[squirrel$year == 2017, -6]
 
 m1 = squirrel[squirrel$year == 2015, -5]
