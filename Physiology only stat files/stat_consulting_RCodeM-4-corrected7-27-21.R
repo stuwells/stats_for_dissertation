@@ -82,18 +82,18 @@ localMaxima <- function(x) {
 ## - plots peaks and events 
 ##################################
 
-analyze_yearly_trends <- function(m1, lag=1, cutoff_Estradiol=400,
-                                  cutoff_Progesterone=70, year='2015',
-                                  up_pro=70,
+analyze_yearly_trends <- function(m1, lag=1, cutoff_Estradiol=250,
+                                  cutoff_Progesterone=50, year='2015',
+                                  up_pro=50,
                                   bot_pro=10,
-                                  up_est=400,
+                                  up_est=250,
                                   bot_est=20)
 
-analyze_yearly_trends <- function(m2, lag=1, cutoff_Estradiol=400,
-                                    cutoff_Progesterone=70, year='2016',
-                                    up_pro=70,
+analyze_yearly_trends <- function(m2, lag=1, cutoff_Estradiol=250,
+                                    cutoff_Progesterone=50, year='2016',
+                                    up_pro=50,
                                     bot_pro=10,
-                                    up_est=400,
+                                    up_est=250,
                                     bot_est=20)  
   
   ####------##### Test
@@ -104,7 +104,7 @@ analyze_yearly_trends <- function(m2, lag=1, cutoff_Estradiol=400,
   estra_max[which(m1$Estradiol < log(cutoff_Estradiol))] <- 0
   
   proge_max <- numeric(nrow(m1))
-  proge_max[localMaxima(m1$Progesterone1)] <- 1
+  proge_max[localMaxima(m1$Progesterone1)] <- 0
   proge_max[which(m1$Progesterone < log(cutoff_Progesterone))] <- 0
   
   event <- numeric(nrow(m1))
