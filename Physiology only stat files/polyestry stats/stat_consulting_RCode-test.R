@@ -1,5 +1,5 @@
 ### Load and clean Data 
-
+rm(list=ls())
 require(data.table)
 require(lubridate)
 require(ggplot2)
@@ -59,8 +59,8 @@ localMaxima <- function(x) {
 ##################################
 
 
-analyze_yearly_trends <- function(m1, lag=0, cutoff_estradiol=2000,
-                                  cutoff_progesterone=400){
+analyze_yearly_trends <- function(m1, lag=0, cutoff_estradiol=200,
+                                  cutoff_progesterone=70){
   ### Detect events 
   estra_max <- numeric(nrow(m1))
   estra_max[localMaxima(m1$Estradiol)] <- 1 
@@ -104,8 +104,8 @@ analyze_yearly_trends <- function(m1, lag=0, cutoff_estradiol=2000,
 ## - plots peaks and events 
 ##################################
 
-analyze_monthly_trends <- function(m1, lag=0, cutoff_estradion=2000, 
-                                   cutoff_progesterone=400){
+analyze_monthly_trends <- function(m1, lag=0, cutoff_estradion=200, 
+                                   cutoff_progesterone=70){
   ### Detect events 
   estra_max <- numeric(nrow(m1))
   estra_max[localMaxima(m1$Estradiol)] <- 1 
@@ -219,7 +219,7 @@ analyze_yearly_trends(m1=m2, lag = 0,cutoff_estradiol = 150,
 ### Monthly Examination and KS Test
 
 a = analyze_yearly_trends(m1=m1, lag = 0,cutoff_estradiol = 150,
-                         cutoff_progesterone = 20)
+                         cutoff_progesterone = 50)
 p1 = test_between_peaks_distribution(a)
 
 

@@ -28,7 +28,8 @@ squirrel$date <- as.Date(squirrel$date,format = '%m/%d/%Y')
 squirrel$year <- year(squirrel$date)
 squirrel$months <- month(squirrel$date, label = T)
 squirrel$day <- day(squirrel$date)
- 
+squirrel$pro <- as.numeric(squirrel$pro)
+summary(squirrel)
 #Adjusted names for code
 names(squirrel)[c(3,4)] <- c('Progesterone','Estradiol')
 
@@ -36,12 +37,13 @@ names(squirrel)[c(3,4)] <- c('Progesterone','Estradiol')
 squirrelRAW <- squirrel
 
 ## Log Transformation
-squirrel$Estradiol_log <- log(squirrel$Estradiol)
-squirrel$Progesterone_log <- log(squirrel$Progesterone)
+squirrel$Progesterone1 <- log(squirrel$Progesterone)
+squirrel$Estradiol2 <- log(squirrel$Estradiol)
+
 
 ### Split year to year--commenting out to test m1,m2 function below 
-year2015 = squirrel[squirrel$year == 2015, -5]
-year2016 = squirrel[squirrel$year == 2016, -5]
+#year2015 = squirrel[squirrel$year == 2015, -5]
+#year2016 = squirrel[squirrel$year == 2016, -5]
 #year2017 = squirrel[squirrel$year == 2017, -6]
 
 m1 = squirrel[squirrel$year == 2015, -5]
@@ -80,19 +82,19 @@ localMaxima <- function(x) {
 ## - plots peaks and events 
 ##################################
 
-analyze_yearly_trendsm1 <- function(m1, lag=1, cutoff_Estradiol=150,
-                                  cutoff_Progesterone=35, year='2015',
-                                  up_pro=20,
+analyze_yearly_trends <- function(m1, lag=1, cutoff_Estradiol=400,
+                                  cutoff_Progesterone=70, year='2015',
+                                  up_pro=70,
                                   bot_pro=10,
-                                  up_est=150,
+                                  up_est=400,
                                   bot_est=20)
 
-analyze_yearly_trendsm2 <- function(m2, lag=1, cutoff_Estradiol=390,
-                                    cutoff_Progesterone=35, year='2016',
-                                    up_pro=20,
+analyze_yearly_trends <- function(m2, lag=1, cutoff_Estradiol=400,
+                                    cutoff_Progesterone=70, year='2016',
+                                    up_pro=70,
                                     bot_pro=10,
-                                    up_est=150,
-                                    bot_est=20){ 
+                                    up_est=400,
+                                    bot_est=20)  
   
   ####------##### Test
   m1 <- year2016
@@ -102,7 +104,7 @@ analyze_yearly_trendsm2 <- function(m2, lag=1, cutoff_Estradiol=390,
   estra_max[which(m1$Estradiol < log(cutoff_Estradiol))] <- 0
   
   proge_max <- numeric(nrow(m1))
-  proge_max[localMaxima(m1$Progesterone)] <- 1
+  proge_max[localMaxima(m1$Progesterone1)] <- 1
   proge_max[which(m1$Progesterone < log(cutoff_Progesterone))] <- 0
   
   event <- numeric(nrow(m1))
@@ -113,7 +115,7 @@ analyze_yearly_trendsm2 <- function(m2, lag=1, cutoff_Estradiol=390,
         #event[i:(i+lag)] <- 1
         event[i] <- 1
       }
-    }
+    
     
   max_mat <- data.frame(estra_max, proge_max, event)
   
@@ -131,8 +133,8 @@ analyze_yearly_trendsm2 <- function(m2, lag=1, cutoff_Estradiol=390,
   legend('topright', c('Estradiol','Progesterone','Ovulation'),
          col=c('blue','green','red'), lwd=2, pch=c(1,1,1), cex=0.8)
   
-  abline(h=log(up_est), lty=2, lwd=2)
-  abline(h=log(bot_est), lty=2, lwd=2)
+  abline(h = log(up_est), lty = 2, lwd = 2)
+  abline(h = log(bot_est), lty = 2, lwd = 2)
   
   abline(h=log(up_pro), lty=2, col='brown', lwd=2)
   abline(h=log(bot_pro), lty=2, col='brown', lwd=2)
@@ -149,8 +151,8 @@ analyze_yearly_trendsm2 <- function(m2, lag=1, cutoff_Estradiol=390,
 ## - plots peaks and events 
 ##################################
 
-analyze_monthly_trends <- function(m1, lag=0, cutoff_Estradiol=150, 
-                                   cutoff_Progesterone=20){
+analyze_monthly_trends <- function(m1, lag=0, cutoff_Estradiol=400, 
+                                   cutoff_Progesterone=70){
   ### Detect events -a third line of code was added to detect progesterone for two days
   estra_max <- numeric(nrow(m1))
   estra_max[localMaxima(m1$Estradiol)] <- 1 
@@ -188,7 +190,7 @@ analyze_monthly_trends <- function(m1, lag=0, cutoff_Estradiol=150,
   #newM1 = melt(m1,id.vars = c('id','day','date','months','year'))
   newM1 <- tidyr::pivot_longer(data=m1,cols=-c('ID','day','date','months','year'),
                                names_to="variable",values_to ="value")
-  p1 = ggplot(newM1, aes(x = day, value, col=variable)) + geom_line() + facet_grid(months~.) + 
+  rp1 = ggplot(newM1, aes(x = day, value, col=variable)) + geom_line() + facet_grid(months~.) + 
     theme_bw() +    theme(
       plot.title = element_text(color="black", size=24, face="bold", hjust = 0.5),
       axis.title.x = element_text(color="black", size=18, face="bold"),
@@ -252,12 +254,11 @@ summary_peaks <- function(time_between_peaks){
   summary_stats <- data.frame(NumberOfOvulation = numPeaks,
                               Avg.Time_BW_Ovu = AvgLength,
                               Median.Time_BW_Ovu = median(time_between_peaks),
-                              # Max_Time_Between_Peaks = max(time_between_peaks),
-                              # Min_Time_Between_Peaks = min(time_between_peaks),
+                              Max_Time_Between_Peaks = max(time_between_peaks),
+                              Min_Time_Between_Peaks = min(time_between_peaks),
                               Std_Deviation = AvgStd,
-                              Pvalue=Pvalue)
-  
-  return(round(summary_stats,2))
+                              Pvalue = Pvalue)
+   
 }
 
 ##################################
@@ -289,9 +290,9 @@ of equal-peak intervals')
 
 ### Yearly summary
 years_plot <- function(days_lag, cutoff_Estradiol, cutoff_Progesterone,
-                       up_pro = 20,
+                       up_pro = 70,
                        bot_pro = 10,
-                       up_est = 150,
+                       up_est = 400,
                        bot_est = 20){
   
   par(mfrow=c(2,1), mar=c(5,5,5,5))
@@ -336,8 +337,8 @@ years_plot <- function(days_lag, cutoff_Estradiol, cutoff_Progesterone,
 
 
 ### Set custom parameters
-cutoff_Estradiol = 150
-cutoff_Progesterone = 20
+cutoff_Estradiol = 400
+cutoff_Progesterone = 70
 days_lag = 1
 
 
@@ -372,9 +373,9 @@ jpeg('polyestry stats/yearlyanalysis.jpg',width = 600, height = 800)
 years_plot(days_lag = days_lag , 
            cutoff_Estradiol = cutoff_Estradiol, 
            cutoff_Progesterone = cutoff_Progesterone,
-           up_pro = 20,
+           up_pro = 70,
            bot_pro = 10,
-           up_est = 150,
+           up_est = 400,
            bot_est = 20)
 #dev.off()
 
@@ -425,9 +426,9 @@ for (one_ID in female_ID) {
   years_plot(days_lag = days_lag , 
              cutoff_Estradiol = cutoff_Estradiol, 
              cutoff_Progesterone = cutoff_Progesterone,
-             up_pro = 20,
+             up_pro = 70,
              bot_pro =10,
-             up_est = 150,
+             up_est = 400,
              bot_est = 20)
   dev.off()
 }
