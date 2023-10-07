@@ -58,7 +58,7 @@ library(ggplot2)
 ##agr1<-with(phybe[phybe$bointun!=0,],glm(b_agr~m_estug+I(m_estug^2)
 ##glm(formula = mal_agr ~ mal_estug + I(mal_estug^2), family = "poisson", 
 ##+     na.action = "na.exclude")
-phybe<-read.csv("behavwest-transformed-6-19-bh.csv")
+phybe <- read.csv("behavwest-transformed-6-19-bh.csv")
 summary(phybe)
 ##subset data to those cases where both animals are in tunnel
 phybe_intun<-phybe[phybe$intun != 0,]

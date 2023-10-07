@@ -1,0 +1,5 @@
+season,progmin,progmax,estmin,estmax,cortmin,cortmax,testmin,testmax
+fall,3.91,317,10.9,433,8.65,592,na,na
+spring,9.89,229,12.1,329,3.4,612,236/34.0,236
+summer,6.14,485,25,1188,7.37,1084,327/6.94,327
+winter,7.31,532,15.9,3525,1.75,893,na,na

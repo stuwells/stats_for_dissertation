@@ -12,6 +12,7 @@ require(ggplot2)
 
 ### Change your directory
 #setwd("C:/Users/stuwe/OneDrive - University of Arizona/Desktop/MGRS stats results/Stat analysis from stat lab")
+
  
 
 
@@ -98,11 +99,11 @@ analyze_yearly_trends <- function(m1, lag=1, cutoff_Estradiol=250,
   ####______##### Test
   ### Detect events 
   estra_max <- numeric(nrow(m1))
-  estra_max[localMaxima(m1$Estradiol)] <- 0 
+  estra_max[localMaxima(m1$Estradiol)] <- 1 
   estra_max[which(m1$Estradiol < log(cutoff_Estradiol))] <- 0
   
   proge_max <- numeric(nrow(m1))
-  proge_max[localMaxima(m1$Progesterone)] <- 0
+  proge_max[localMaxima(m1$Progesterone)] <- 1
   proge_max[which(m1$Progesterone < log(cutoff_Progesterone))] <- 0
   
   event <- numeric(nrow(m1))
@@ -116,6 +117,23 @@ analyze_yearly_trends <- function(m1, lag=1, cutoff_Estradiol=250,
     }
     
   max_mat <- data.frame(estra_max, proge_max, event)
+  
+  ### Plot all events--copied here from original code
+  #plot(m1$date, m1$Progesterone, type='l', ylim=c(4,9), lwd=2, col='green', 
+   #    main='Estradiol ~ Progesterone', xlab='Day',ylab='Log Concentration')
+  #lines(m1$date, m1$Estradiol, type='l', lwd=2, col='blue')
+  #event <- m1$Estradiol * max_mat$event
+  #event2 <- m1$Progesterone * max_mat$event
+  
+  #points(m1$date, event, col='red', lwd=5)
+ # points(m1$date, event2, col='red',lwd=5)
+  
+ # segments(x0 =m1$date , y0 = event2, x1 = m1$date, y1=event, lwd=2, lty=2, col='red' )
+ # legend('topright', c('Estradiol','Progesterone','Ovulation'),
+  #       col=c('blue','green','red'), lwd=2, pch=c(1,1,1))
+  
+#nj'p} 
+  
   
   ### Plot all events
   plot(m1$date, m1$Progesterone, type='l', ylim=c(3,4), lwd=2, col='green', 
@@ -161,7 +179,7 @@ analyze_monthly_trends <- function(m1, lag=0, cutoff_Estradiol=200,
   proge_max[which(m1$Progesterone < log(cutoff_Progesterone))] <- 0
   
   event <- numeric(nrow(m1))
-  #cat("starting vaule of event",event,"\n") debugging code
+  #cat("starting value of event",event,"\n") debugging code
   df = data.frame(estra_max,
                   proge_max,
                   m1$date)
@@ -207,7 +225,7 @@ analyze_monthly_trends <- function(m1, lag=0, cutoff_Estradiol=200,
     
     fit1 <- fitdistr(time_between_peaks, "exponential")
 
-    # 
+     
      true_Exp <- rexp(10000, fit1$estimate)
      
     plot(ecdf(time_between_peaks), xlim=range(c(time_between_peaks, true_Exp)), col="dodgerblue", main='KS Test Visualization', 
@@ -290,11 +308,11 @@ of equal-peak intervals')
 ### Yearly summary
 years_plot <- function(days_lag, cutoff_Estradiol, cutoff_Progesterone,
                        up_pro = 70,
-                       bot_pro = 3,
+                       bot_pro = 10,
                        up_est = 350,
                        bot_est = 20){
   
-  par(mfrow=c(2,1), mar=c(5,5,5,5))
+  par(mfrow=c(3,4), mar=c(5,5,5,5))
   analyze_yearly_trends(m1=year2015, lag = days_lag,
                         cutoff_Estradiol = cutoff_Estradiol,
                         cutoff_Progesterone = cutoff_Progesterone,
@@ -337,7 +355,7 @@ years_plot <- function(days_lag, cutoff_Estradiol, cutoff_Progesterone,
 
 ### Set custom parameters
 cutoff_Estradiol = 200
-cutoff_Progesterone = 30
+cutoff_Progesterone = 10
 days_lag = 0
 
 
@@ -368,7 +386,7 @@ print(peakSummary)
 ## Analyze squirrel data using
 ## Yearly analysis
 
-jpeg('polyestry stats/yearlyanalysisa.jpg',width = 600, height = 800)
+jpeg('polyestry stats/yearlyanalysisa.jpg',width = 4, height = 3, units ="in")
 years_plot(days_lag = days_lag , 
            cutoff_Estradiol = cutoff_Estradiol, 
            cutoff_Progesterone = cutoff_Progesterone,
@@ -421,7 +439,7 @@ for (one_ID in female_ID) {
   ## Analyze squirrel data using
   ## Yearly analysis
   comparison_file <- paste0("polyestry stats/monthlysummary",one_ID,".jpeg")
-  jpeg(comparison_file ,width = 600, height = 800)
+  jpeg(comparison_file ,width = 500, height = 800)
   years_plot(days_lag = days_lag , 
              cutoff_Estradiol = cutoff_Estradiol, 
              cutoff_Progesterone = cutoff_Progesterone,
@@ -439,6 +457,18 @@ for (one_ID in female_ID) {
 #cat("Progesterone sum:", sum(proge_max[i:(i+lag)]), "\n")
 
 if(estra_max[i] == 1 & sum(proge_max[i:(i+lag)]) > 0 &
-day(m1$date[date_search]) - day(m1$date[i]) <= lag) {
-  
+day(m1$date[date_search]) - day(m1$date[i]) <- lag)  
+#code below is commented out until I figure out how to use this in place of the current plot code  
+#  ggplot(the_data, aes(x, y)) +
+#  geom_line() +
+#  xlab("False Positive Rate") +
+#  ylab("Average true positive rate") +
+#  coord_cartesian(0:1, 0:1)
+#}
 
+#ggsave(
+ # "ggtest.png",
+#  ggplot_alternative(),
+#  width = 3.25,
+ # height = 3.25,
+#  dpi = 1200

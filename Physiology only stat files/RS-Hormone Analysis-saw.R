@@ -2,8 +2,9 @@
 rm(list=ls())
 #setwd('C:/Users/marim/OneDrive/Documents/Phd/Analysis')
 
-#setwd C:\Users\stuwe\OneDrive - University of Arizona\Desktop\MGRS stats results#read the data
-getwd physio  
+#setwd("C:/Users/stuwe/OneDrive - University of Arizona/1-Doctoral chapters/Stats for dissertation/Physiology only stat files")
+#getwd physio 
+#read the data
 metadata <- read.csv("HormoneDatasetworkingwithseasons.csv", header = TRUE)
 #I want to make sure that the hormones level are read as numeric and not characters, na.strings = c("NA"))
 metadata$prog.10 <- as.numeric(metadata$prog.10)
@@ -22,7 +23,7 @@ metadata$est.10 <- scale(metadata$est.10,center = FALSE)
 metadata$cort.10 <- scale(metadata$cort.10,center = FALSE)
 metadata$cort.10 <- scale(metadata$test.10,center = FALSE)
 summary
- 
+str(metadata)
 #Compute summary statistics by groups - count, mean, sd, min, max
 library(dplyr)
 library(ggplot2)
@@ -176,13 +177,14 @@ boxplot(Test.10 ~ Season, data = metadata,
         frame = FALSE, col = c("blue", "orange", "grey","red"))
 # plotmeans
 library("gplots")
+library("plotmeans")
 plotmeans(prog.10 ~ Location, data = metadata, frame = FALSE,
           xlab = "Location", ylab = "Progesterone-Ng/g Level", 
           main="Mean Plot for Progesterone with 95% CI")
 
 plotmeans(prog.10 ~ Season, data = metadata, frame = FALSE,
           xlab = "Season", ylab = "Progesterone-Ng/g", 
-          main="Mean Plot for Progesterone with 95% CI") 
+          main ="Mean Plot for Progesterone with 95% CI") 
 
 
 plotmeans(est.10 ~ Location, data = metadata, frame = FALSE,

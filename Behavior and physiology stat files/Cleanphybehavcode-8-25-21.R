@@ -1,5 +1,7 @@
 rm(list=ls()) 
-estagr<-read.csv("behavphy_all-checking.csv ")
+citation("pkgname")
+setwd("C:/Users/stuwe/OneDrive - University of Arizona/1-Doctoral chapters/Stats for dissertation/Behavior and physiology stat files")
+estagr<-read.csv("behavwest-transformed-6-19-bh.csv")
 summary (estagr)
 str(estagr)
 library (ggplot2)
@@ -151,3 +153,4 @@ geom_point()
 line.plot
 #dev.off()
 ggsave(plot=line.plot,filename = "fig1.jpg",width = 12.5, height = 7.5, units="in",dpi = 600)
+
